@@ -12,3 +12,6 @@ https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandm
 Charts report percentage infections for each area.
 
 Downloader.py runs every day to pull the infections total data. Dash1_appa.py is the dash application which is served.
+
+
+I am currently working on a Data Fellowship apprenticeship, hence the use of Pandas when I could probably have found a far more efficient way of getting the same effect. I do however use this code base for one or two other intersting things on my home system, so pandas isn't entirely going to waste.  While I don't object to anyone taking this code and using it for any purpose, it would be brilliant if you could drop me an email at markautysoftware@gmail.com, if nothing else, just to say hello. 
