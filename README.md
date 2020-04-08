@@ -11,7 +11,7 @@ https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandm
 
 Charts report percentage infections for each area.
 
-Downloader.py runs every day to pull the infections total data. Dash1_appa.py is the dash application which is served.
+Downloader.py runs every day to pull the infections total data. Dash1_appa.py is the dash application which is served. The actual raw data is updated at around 5pm, however as it seemed to be variable during the early stages of the outbreak I decided to access it in the early hours, hence it lags the published data by about 10 hours....  ie, if you are in the UK, you are most likely to see the data that was published yesterday afternoon.
 
 
 I am currently working on a Data Fellowship apprenticeship, hence the use of Pandas when I could probably have found a far more efficient way of getting the same effect. I do however use this code base for one or two other intersting things on my home system, so pandas isn't entirely going to waste.  While I don't object to anyone taking this code and using it for any purpose, it would be brilliant if you could drop me an email at markautysoftware@gmail.com, if nothing else, just to say hello. 
