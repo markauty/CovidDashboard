@@ -70,7 +70,7 @@ def Get_List_of_CSV_Files():
             file_list.append(file[:-4])
     file_list.sort()
     return file_list
-        
+
 
 #incidencelog=df2.copy()
 #file_list=['20200320','20200321','20200322','20200323','20200324']
@@ -83,7 +83,7 @@ def Create_Incidence_Dataframes(incidencelog,file_list):
     incidencelog['2020']=incidencelog['2020orig']*1000
 
     #file_list=['20200320','20200321','20200322','20200323','20200324']
-    
+
     #print(file_list)
     for files in file_list:
         datefile=pd.read_csv('dailyreports/'+files+".csv",thousands=',')
@@ -93,7 +93,7 @@ def Create_Incidence_Dataframes(incidencelog,file_list):
         datefile.rename(columns={'TotalCases': files,'GSS_NM':'AREA'}, inplace=True)
         datefile.drop(columns=["GSS_CD"], inplace=True)
 
-    
+
         incidencelog=incidencelog.merge(datefile,left_on='AREA', right_on='AREA')
         incidencelog['prop_'+files]=(incidencelog[files]/incidencelog['2020'])*100
         incidencelog['rank_'+files]=incidencelog['prop_'+files].rank(method='dense',ascending=False)
@@ -118,7 +118,7 @@ def Create_Incidence_Dataframes(incidencelog,file_list):
         if col[0:5] in ("prop_"):
             proplog_cols_to_keep.append(col)
             incidencelog_cols_to_drop.append(col)
-        
+
         elif col[0:5] in ("rank_"):
             ranklog_cols_to_keep.append(col)
             incidencelog_cols_to_drop.append(col)
@@ -126,7 +126,7 @@ def Create_Incidence_Dataframes(incidencelog,file_list):
     #print('proplog_cols_to_keep: ',proplog_cols_to_keep)
     proplog=incidencelog[proplog_cols_to_keep]
     ranklog=incidencelog[ranklog_cols_to_keep]
-    #print(proplog.head())
+    print(proplog.head())
 
     for col in ranklog.columns:
         if col !='AREA':
@@ -138,25 +138,24 @@ def Create_Incidence_Dataframes(incidencelog,file_list):
             proplog.rename(columns={col:col[5:]},inplace=True)
             #proplog.rename(columns={col:datetime.datetime.strptime(col[5:], '%Y%m%d').date().strftime('%Y%m%d')},inplace=True)
 
-    
-    
+
+
     #tidy ranklog
     ranklog.set_index('AREA',inplace=True)
     ranklog=ranklog.T
     ranklog.reset_index(inplace=True)
     ranklog.rename(columns={"index":"Date"}, inplace=True)
-    print(ranklog.head())
-    ranklog['formatted_date']=pd.to_datetime(ranklog['Date'],format='%Y%m%d')
-    print(ranklog.head())
-    
+    #print(ranklog.head())
+    ranklog['formatted_date']=pd.to_datetime(ranklog['Date'],format='%Y%m%d')#20200408
+
     #proportion by date
     probydate=proplog.copy()
     probydate.set_index('AREA',inplace=True)
     probydate=probydate.T
     probydate.reset_index(inplace=True)
     probydate.rename(columns={"index":"Date"}, inplace=True)
-    probydate['formatted_date']=pd.to_datetime(probydate['Date'],format='%Y%m%d')
-    
+    probydate['formatted_date']=pd.to_datetime(probydate['Date'],format='%Y%m%d')#20200408
+
     incidencelog.drop(columns=incidencelog_cols_to_drop,inplace=True)
     incidencelog.head()
     #print('probydate')
@@ -173,11 +172,11 @@ def Plot_Proportion_by_Area(df,date):
         df.reset_index(inplace=True)
     except:
         pass
-    
+
     Wirral=df.index[df['AREA']=='Wirral']
     Liverpool=df.index[df['AREA']=='Liverpool']
     CheshireWest=df.index[df['AREA']=='Cheshire West and Chester']
-    
+
     fig = plt.figure(figsize=(25,10))
     ax = fig.add_subplot(1, 1, 1)
     barplot=plt.bar(df["AREA"],df[date], width=.8, align='center')
@@ -192,14 +191,14 @@ def Plot_Proportion_by_Area(df,date):
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
     plt.tight_layout()
-    #ax.figure.savefig(datestr+".jpeg")  #needs to be png for server.  
+    #ax.figure.savefig(datestr+".jpeg")  #needs to be png for server.
     plt.show()
-    
+
 def Chart_Proportion_Over_Time(df,areas):
     ax=df.plot(x='Date',y=areas)
     ax.set_ylabel('Proportion of population (%)')
     ax.set_title('Change in Proportion over time')
-    
+
 def Chart_Rank_Over_Time(df,areas):
     #areas=list(pl)[1:]#
     #areas=['Wirral','Liverpool','Cheshire West and Chester']
@@ -214,9 +213,9 @@ def Chart_Rank_Over_Time(df,areas):
     ax.set_ylabel('Rank')
     ax.set_title('Change in Ranking over time')
     plt.show()
-	
-	
-if __name__ == '__main__':	
+
+
+if __name__ == '__main__':
     #set date
     datestr=datetime.datetime.now().strftime("%Y%m%d")
     #Download population data
@@ -238,4 +237,3 @@ if __name__ == '__main__':
     #Chart_Rank_Over_Time(ranklog2,['Wirral','Liverpool','Cheshire West and Chester'])
     #print(proplog2.head(10))
     #print(proplog2.columns)
-            

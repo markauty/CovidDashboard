@@ -32,16 +32,16 @@ print('ranklog2')
 print(ranklog2['Date'].values.tolist())
 
 proplog2.sort_values(by=datestr,ascending=False, inplace=True)
-  
+
 print('Done')
 
 
 
-    
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__)#, external_stylesheets=external_stylesheets)
-app.title="Mark's COVID Plots"
+app.title="Mark's COVID Plots"#20200408
 df = pd.read_csv('https://gist.githubusercontent.com/chriddyp/5d1ea79569ed194d432e56108a04d188/raw/a9f9e8076b837d541398e999dcbac2b2826a81f8/gdp-life-exp-2007.csv')
 
 
@@ -66,7 +66,7 @@ app.layout = html.Div([
         ),
     html.Label(children='Pick an area for more information:'),
 
-    
+
     #add a dropdown pulling county data
     dcc.Dropdown(
         id='dropdown',
@@ -84,13 +84,14 @@ app.layout = html.Div([
     ),
 
 
-    
+
     #show the chart of areas over time
     dcc.Graph(id='live-update-graph'),
 
-    
+
     #show the chart of rank positions over time
     dcc.Graph(id='live-update-graph2'),
+
     html.Div([
     html.Label(' '),
     html.Label('The application pulls daily UK covid infection totals for UK health areas and population data from '),
@@ -118,23 +119,23 @@ app.layout = html.Div([
 def update_output_div(input_value1,value2):
     if input_value1=='':
         input_value='Barnet'
-    mylist=[]    
+    mylist=[]
     for n in input_value1:
-        mylist.append(dict(x=propbydate2['formatted_date'],name=n,
+        mylist.append(dict(x=propbydate2['formatted_date'],name=n,#20200408
                     y=propbydate2[n],
                     opacity=0.7,
                     marker={
                         'size': 15,
                         'line': {'width': 0.5, 'color': 'white'}
                     },
-                    
+
                 ))
     fig={
             'data': mylist,
             'layout': dict(
-                xaxis={'title': 'Date'},
+                xaxis={'title': 'Date'},#,'type': 'category'},#20200408
                 yaxis={'title': '%'},
-                margin={'l': 40, 'b': 60, 't': 50, 'r': 10},
+                margin={'l': 40, 'b': 40, 't': 50, 'r': 40},
                 legend={'x': 0, 'y': 1},
                 hovermode='closest',
                 title= 'Recorded Infections % of population'
@@ -152,27 +153,27 @@ def update_output_div(input_value1,value2):
 def update_output_div(input_value1, value2):
     if input_value1=='':
         input_value='Barnet'
-    mylist=[]    
+    mylist=[]
     for n in input_value1:
-        mylist.append(dict(x=ranklog2['formatted_date'],name=n,
+        mylist.append(dict(x=ranklog2['formatted_date'],name=n,#20200408
                     y=ranklog2[n],
                     opacity=0.7,
                     marker={
                         'size': 15,
                         'line': {'width': 0.5, 'color': 'white'}
-                    }, 
+                    },
                 ))
     fig={
             'data': mylist,
 
             'layout': dict(
-                xaxis={'title': 'Date'},
+                xaxis={'title': 'Date'},#,'type': 'category'},#20200408
                 yaxis={'title': 'rank position','autorange': "reversed"},
-                margin={'l': 40, 'b': 60, 't': 50, 'r': 40},
+                margin={'l': 40, 'b': 40, 't': 50, 'r': 40},
                 legend={'x': 0, 'y': 1},
                 hovermode='closest',
                 title='Rank relative to other areas',
-                
+
             )
         }
     return fig
@@ -191,7 +192,7 @@ def update_mainchart_div(input_value,selected_areas):
     proplog2.sort_values(by=input_value,ascending=False, inplace=True)
     print(proplog2.head())
     areaslist=proplog2['AREA'].tolist()
-    
+
     #get position of key values. Get number of columns
     #change colour accordingly.
     colours=['lightblue'] * len(areaslist)
@@ -204,9 +205,9 @@ def update_mainchart_div(input_value,selected_areas):
                     colour==0
                 else:
                     colour +=1
-        
+
     figure={
-            'data': [go.Bar(x=proplog2['AREA'], y=proplog2[input_value], marker=dict(color=colours))], 
+            'data': [go.Bar(x=proplog2['AREA'], y=proplog2[input_value], marker=dict(color=colours))],
             'layout':
             go.Layout(title='Recorded Infections percent of Population ' + input_value,
                       barmode='group',
@@ -227,8 +228,8 @@ def update_database(n):
     incidencelog2, proplog2,ranklog2,propbydate2=cov.Create_Incidence_Dataframes(populationdata,csvfiles)
     proplog2.sort_values(by=datestr,ascending=False, inplace=True)
     return [{'label': str(i)[:10], 'value': str(i)[:10].replace("-","")} for i in ranklog2['Date'].unique()]
-    
-    
+
+
 
 if __name__ == '__main__':
     print("got here")
